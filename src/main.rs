@@ -188,11 +188,16 @@ fn read_interrupt<T: UsbContext>(handle: &mut DeviceHandle<T>, address: u8) -> R
 }
 
 fn print_data(data: Vec<u8>) {
-    let byte8 = data[7] as f32;
-    let byte9 = data[8] as f32;
-    println!("Temp : {:.2}°C", byte9 + byte8 / 255.0);
-
     let mut rdr = Cursor::new(data);
+
+    // following tweak is suggest by https://www.reddit.com/user/wmanley
+    // https://www.reddit.com/r/rust/comments/i0moov/reverse_engineering_a_usb_device_with_rust/fzqflcx?utm_source=share&utm_medium=web2x
+    rdr.set_position(7);
+    println!(
+        "Temp : {:.2}°C",
+        rdr.read_u16::<LittleEndian>().unwrap_or_default() as f32 / 256.0
+    );
+
     rdr.set_position(15);
     println!(
         "Fan 1: {:?} rpm",
