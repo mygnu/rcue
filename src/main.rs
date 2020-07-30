@@ -188,9 +188,9 @@ fn read_interrupt<T: UsbContext>(handle: &mut DeviceHandle<T>, address: u8) -> R
 }
 
 fn print_data(data: Vec<u8>) {
-    let byet8 = data[7] as f32;
+    let byte8 = data[7] as f32;
     let byte9 = data[8] as f32;
-    println!("Temp : {:.2}°C", byte9 + byet8 / 256f32);
+    println!("Temp : {:.2}°C", byte9 + byte8 / 255.0);
 
     let mut rdr = Cursor::new(data);
     rdr.set_position(15);
