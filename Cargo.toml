@@ -1,11 +1,32 @@
 [package]
 name = "rcue"
 version = "0.1.0"
+description = "Simple stat reader for Corsair H150iRGBPROXT AIO"
 authors = ["mygnu <tech@gill.net.in>"]
 edition = "2018"
+readme = "README.md"
+license = "GPL-3.0"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
-
 [dependencies]
 rusb = "0.6"
 byteorder = "1.3"
+
+# Metadata for Debian Package Builder `cargo-deb`
+[package.metadata.deb]
+maintainer = "Harry Gill <tech@gill.net.in>"
+copyright = "2020, Harry Gill <tech@gill.net.in>"
+license-file = ["LICENSE"]
+extended-description = """\
+Simple stat reader for Corsair H150iRGBPROXT AIO \
+"""
+# try autogenerate dependencies for .deb installer
+depends = "$auto"
+# debian application category
+section = "utils"
+priority = "optional"
+# files to copy on install
+assets = [
+    ["target/release/rcue", "/usr/bin/", "755"],
+    ["README.md", "usr/share/doc/rcue/README", "644"],
+]

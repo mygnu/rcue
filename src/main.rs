@@ -18,7 +18,7 @@ fn main() -> Result<()> {
     let (mut device, mut handle) =
         open_device(&mut context, VID, PID).expect("Did not find USB device");
 
-    print_device_info(&mut handle)?;
+    // print_device_info(&mut handle)?;
 
     let endpoints = find_readable_endpoints(&mut device)?;
     let endpoint = endpoints
@@ -32,7 +32,7 @@ fn main() -> Result<()> {
         }
         _ => false,
     };
-    println!("has kernel driver? {}", has_kernel_driver);
+    // println!("has kernel driver? {}", has_kernel_driver);
     // control device here
 
     // claim and configure device
@@ -41,7 +41,7 @@ fn main() -> Result<()> {
     set_idle(&mut handle).ok();
     set_report(&mut handle)?;
     let data = read_interrupt(&mut handle, endpoint.address)?;
-    println!("{:02X?}", &data);
+    // println!("{:02X?}", &data);
     print_data(data);
     // cleanup after use
     handle.release_interface(endpoint.iface)?;
@@ -93,19 +93,19 @@ fn print_device_info<T: UsbContext>(handle: &mut DeviceHandle<T>) -> Result<()> 
             "Manufacturer: {}",
             handle
                 .read_manufacturer_string(language, &device_desc, timeout)
-                .unwrap_or("Not Found".to_string())
+                .unwrap_or_else(|_| "Not Found".to_string())
         );
         println!(
             "Product: {}",
             handle
                 .read_product_string(language, &device_desc, timeout)
-                .unwrap_or("Not Found".to_string())
+                .unwrap_or_else(|_| "Not Found".to_string())
         );
         println!(
             "Serial Number: {}",
             handle
                 .read_serial_number_string(language, &device_desc, timeout)
-                .unwrap_or("Not Found".to_string())
+                .unwrap_or_else(|_| "Not Found".to_string())
         );
     }
     Ok(())
